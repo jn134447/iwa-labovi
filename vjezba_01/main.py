@@ -15,7 +15,7 @@ def retrieve_source(s: socket.socket, ip: str, page: str) -> str:
     request = f"GET {page} HTTP/1.1\r\nHost: {ip}\r\nConnection: close\r\n\r\n"
 
     # try except blocks cause i dont want to halt crawling
-    # beucase of a websites being shit
+    # beucase of websites being "unique"
     try:
         s.send(request.encode())
     except Exception:
