@@ -59,7 +59,7 @@ def filter_links(src: str) -> list[str]:
         beg = end_str + 1
 
 
-def validate_links(links: list[str]) -> list[str]:
+def get_valid_links(links: list[str]) -> list[str]:
     rem = []
     for link in links:
         if not link.startswith("http://"):
@@ -87,7 +87,7 @@ def run_crawler(
         visited.append(link)
 
         new_links = filter_links(page_src)
-        new_links = validate_links(new_links)
+        new_links = get_valid_links(new_links)
 
         for nlink in new_links:
             nlink = nlink.lstrip("http://")
