@@ -11,6 +11,7 @@ pkgs.mkShell {
     ruff
     ty
     uv
-    python315
+    python313
+    python313Packages.debugpy
   ];
 }
