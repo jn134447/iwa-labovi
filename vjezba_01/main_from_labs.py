@@ -91,7 +91,11 @@ def run_crawler(
     while i < len(pages):
         page = pages[i]
 
+        # socket has to be recreated on each loop cause the server closes it after receiving data from server
+        # without "Connection: close" in the retrieve_source(), it hangs.
+        # on windows it threw an error while debugging, while on linux it silently failed, weird.
         s = connect_to_server(ip, port)
+
         print(f"CHECKING PAGE [{len(visited_pages)}]: {page}")
         page_src = retrieve_source(s, ip, page)
         if not (got_valid_response(page_src)):
