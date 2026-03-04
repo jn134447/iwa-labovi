@@ -19,6 +19,7 @@ def retrieve_source(s: socket.socket, ip: str, page: str) -> str:
     try:
         s.send(request.encode())
     except Exception:
+        print("encode err")
         return b"".decode()
 
     response = b""
@@ -31,10 +32,11 @@ def retrieve_source(s: socket.socket, ip: str, page: str) -> str:
     try:
         return response.decode()
     except Exception:
+        print("decode err")
         return b"".decode()
 
 
-def filter_links(src: str) -> list[str]:
+def get_links(src: str) -> list[str]:
     links = []
     beg = 0
     beg_str = 0
@@ -70,44 +72,62 @@ def get_valid_links(links: list[str]) -> list[str]:
     return links
 
 
+def got_valid_response(src: str) -> bool:
+    found = src.find("200 OK")
+    if found < 0:
+        return False
+    else:
+        return True
+
+
 def run_crawler(
-    links: list[str], max_links: int, port: int = 80, page: str = "/"
+    ip: str, max_visited_pages: int, port: int = 80, page: str = "/"
 ) -> list[str]:
-    visited = []
+    visited_pages = []
+    pages = []
+    pages.append(page)
+
     i = 0
-    while i < len(links):
-        link = links[i]
+    while i < len(pages):
+        page = pages[i]
 
-        print(f"connecting to: {link}")
-        s = connect_to_server(link, port)
+        # socket has to be recreated on each loop cause the server closes it after receiving data from server
+        # without "Connection: close" in the retrieve_source(), it hangs.
+        # on windows it threw an error while debugging, while on linux it silently failed, weird.
+        s = connect_to_server(ip, port)
 
-        page_src = retrieve_source(s, link, page)
+        print(f"CHECKING PAGE [{len(visited_pages)}]: {page}")
+        page_src = retrieve_source(s, ip, page)
+        if not (got_valid_response(page_src)):
+            print("didn't get valid response")
+            s.close()
+            i += 1
+            continue
+
+        # print(page_src)
+
+        visited_pages.append(page)
+        if len(visited_pages) >= max_visited_pages:
+            print("hit threshold!")
+            return pages
+
+        new_links = get_links(page_src)
+        # new_links = get_valid_links(new_links)
+
+        for npath in new_links:
+            if npath not in pages:
+                print(f"\tnew [{len(pages)}]: {npath}")
+                pages.append(npath)
 
         s.close()
-        visited.append(link)
-
-        new_links = filter_links(page_src)
-        new_links = get_valid_links(new_links)
-
-        for nlink in new_links:
-            nlink = nlink.lstrip("http://")
-            nlink = nlink.split("/")[0]
-
-            if nlink not in links:
-                print("new: ", nlink)
-                links.append(nlink)
-
-                if len(links) >= max_links:
-                    print("hit max_links!")
-                    return links
-
         i += 1
 
-    return links
+    return pages
 
 
 # links = ["wtarreau.free.fr", "1wt.eu", "www.productontology.org", "www.sekonix.com"]
-links = ["www.productontology.org"]
+# links = ["www.productontology.org"]
+ip = "crawler-test.com"
 # links = ["www.poslovniforum.hr"]
 # links = ["pmgsc.teletalk.com.bd"]
 # links = ["www.hypercubeusa.com"]
@@ -115,7 +135,7 @@ links = ["www.productontology.org"]
 # port = 80
 # page = "/"
 
-retlinks = run_crawler(links, 22)
+retpages = run_crawler(ip, 50)
 print("----------")
-print(retlinks)
-print(len(retlinks))
+print(retpages)
+print(len(retpages))
