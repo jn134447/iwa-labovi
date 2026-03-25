@@ -2,7 +2,7 @@ import subjects as s
 
 def header():
     print("Content-type: text/html")
-    print()
+    # print()
 
 def print_html_start(title=""):
     print('''
@@ -26,6 +26,7 @@ def print_year_buttons():
     for key in s.year_names:
         val = s.year_names[key]
         print('<input type="submit" name="year" value="'+ val +'" >')
+    print('<input type="submit" name="list_all" value="List all" >')
         
 def table_start(year = 1):
     val = s.year_names[year]
@@ -38,15 +39,7 @@ def table_start(year = 1):
             </tr>
         ''')
 
-def table_subject_rows_for_year(all_cookies, year = 1):
-    for key in s.subjects:
-        baked_cookie = all_cookies.get(key)
-        baked_value = "not"
-        if baked_cookie is not None:
-            baked_value = baked_cookie.value
-        val = s.subjects[key]
-        if val["year"] != year: 
-            continue
+def print_predmet(key, val, baked_value):
         print('''
             <tr>
                 <td>''' + val["name"] + '''</td>
@@ -60,10 +53,30 @@ def table_subject_rows_for_year(all_cookies, year = 1):
             </tr>
         ''')
 
+def table_subject_rows_for_year(all_cookies, params, year = 1):
+    for key in s.subjects:
+        val = s.subjects[key]
+        if val["year"] != year: 
+            continue
+
+        baked_value = "not"
+        # fetch param
+        if params.getvalue(key) is not None:
+            baked_value = params.getvalue(key)
+        else:
+            # fetch cookie
+            baked_cookie = all_cookies.get(key)
+            if baked_cookie is not None:
+                baked_value = baked_cookie.value
+                
+        # display
+        print_predmet(key, val, baked_value)
+
+
 def table_end():
     print('''
         </table>
-        <a href="./list_all.py">List all</a>
+         
         ''')
 
 def form_start():
@@ -71,3 +84,46 @@ def form_start():
 
 def form_end():
     print('</form>')
+
+
+# list_all
+def la_table_start():
+    print('''
+        <table>
+            <tr>
+                <th>Predmeti</th>
+                <th>Status</th>
+                <th>Bodovi</th>
+            </tr>
+        ''')
+    
+def la_table_subjects_state(all_cookies, params):
+    total = 0
+    for key in s.subjects:
+
+        baked_value = "not"
+        # fetch param
+        if params.getvalue(key) is not None:
+            baked_value = params.getvalue(key)
+        else:
+            # fetch cookie
+            baked_cookie = all_cookies.get(key)
+            if baked_cookie is not None:
+                baked_value = baked_cookie.value
+
+        val = s.subjects[key]
+        print('''
+            <tr>
+                <td>''' + val["name"] + '''</td>
+                <td>''' + s.status_names[baked_value] + '''</td>
+                <td>''' + str(val["ects"]) + '''</td>
+            </tr>
+        ''')
+        if baked_value == "pass":
+            total += val["ects"]
+    return total
+
+def la_table_end():
+    print('''
+        </table>
+        ''')
