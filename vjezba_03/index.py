@@ -21,7 +21,7 @@ if os.environ["REQUEST_METHOD"].upper() == "POST":
  
     print(cookie.output())
 
-
+print() # header end
 
 year_id = 1
 if params.getvalue("list_all") is None:
@@ -30,8 +30,6 @@ if params.getvalue("list_all") is None:
 
 #print(params)
 #print(all_cookies)
-
-print()
 
 if params.getvalue("list_all") is not None:
 
