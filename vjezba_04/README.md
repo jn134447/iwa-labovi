@@ -1,3 +1,4 @@
+```
 steps to recreate on labs:
     - use anacondas python 3.8
     - install the sql shit with:
@@ -30,3 +31,4 @@ steps to recreate on labs:
         4. oh btw db.py relies on session.py, also copy the one from the examples that has the higher line count
     - good job you have the most useless fucking website that can be
         hacked in fucking miliseconds by an AI crawler dropping ur entire database
+```
