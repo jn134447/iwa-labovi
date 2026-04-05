@@ -18,6 +18,7 @@ pkgs.mkShell {
       uv
     ]
     ++ [
+      oldpkgs.python38Packages.mysql-connector
       oldpkgs.python38
     ];
 }
