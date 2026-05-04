@@ -1,3 +1,5 @@
+# NOTE: i did not use this as i did programming on windows
+ 
 let
   oldpkgs =
     import
