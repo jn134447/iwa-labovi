@@ -1,8 +1,8 @@
 ```
+"modified/" is a modified original, "original/" is from a dear friend of mine
 
 remember to swap python.exe for anacondas python, maybe some sql shit from previous
 exercise aswell...
-
 # "C:\ProgramData\Anaconda3\python.exe" -m pip install mysql-connector
  
 name of db: jnkiwavj5
