@@ -39,8 +39,7 @@
                             <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
                         {% else %}
                             {% for group in user.groups.all %}
-                                {% if group.name ==
-                                    "Employees" %}
+                                {% if group.name == "Employees" %}
                                     <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
                                 {% endif %}
                             {% endfor %}

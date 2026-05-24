@@ -16,7 +16,7 @@
             <h3>Top Books</h3>
             <ul class="list-group">
                 {% for book in top_books %}
-                    <li class="list-group-item">{{ book.title }} — {{ book.rental_count }} rentals</li>
+                    <li class="list-group-item">{{ book.title }}:  {{ book.rental_count }} rentals</li>
                 {% empty %}
                     <li class="list-group-item">No rentals yet.</li>
                 {% endfor %}
@@ -26,7 +26,7 @@
             <h3>Top Authors</h3>
             <ul class="list-group">
                 {% for author in top_authors %}
-                    <li class="list-group-item">{{ author }} — {{ author.rental_count }} rentals</li>
+                    <li class="list-group-item">{{ author }}:  {{ author.rental_count }} rentals</li>
                 {% empty %}
                     <li class="list-group-item">No rentals yet.</li>
                 {% endfor %}
