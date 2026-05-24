@@ -1,3 +1,14 @@
+{% if user.is_authenticated %}
+  <p>Logged in as {{ user.username }} | 
+    <form method="post" action="{% url 'logout' %}" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit">Logout</button>
+    </form>
+  </p>
+{% else %}
+  <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Sign Up</a></p>
+{% endif %}
+
 <h1>Books</h1>
 
 <form method="get">
@@ -5,6 +16,12 @@
   <input type="text" name="author" placeholder="Search by author...">
   <button type="submit">Filter</button>
 </form>
+
+<!-- admin -->
+{% if user.is_authenticated and user.is_staff %}
+  <p><a href="{% url 'book_add' %}">Add Book</a></p>
+{% endif %}
+<!--  -->
 
 <ul>
   {% for book in books %}
