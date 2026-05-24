@@ -1,71 +1,65 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Seminar Library</title>
+        <link href="{% static 'seminar/css/bootstrap.min.css' %}" rel="stylesheet" />
+        <style>
+      /* for form.as_p styling  */
+      form p {
+        margin-bottom: 1rem;
+      }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seminar Library</title>
+      form p input {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+      }
 
-    <link href="{% static 'seminar/css/bootstrap.min.css' %}" rel="stylesheet">
-
-    <style>
-        /* for form.as_p styling  */
-        form p {
-            margin-bottom: 1rem;
-        }
-
-        form p input {
-            display: block;
-            width: 100%;
-            padding: 0.375rem 0.75rem;
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-        }
-
-        form p label {
-            display: block;
-            margin-bottom: 0.25rem;
-            font-weight: 500;
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'book_list' %}">Library</a>
-            <div class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                    <span class="nav-item nav-link text-light">Hello, {{ user.username }}</span>
-                    {% if user.is_staff %}
-                        <a class="nav-item nav-link" href="{% url 'book_add' %}">Add Book</a>
-                        <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
-                    {% endif %}
-                    {% for group in user.groups.all %}
-                        {% if group.name == "Employees" %}
+      form p label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'book_list' %}">Library</a>
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <span class="nav-item nav-link text-light">Hello, {{ user.username }}</span>
+                        {% if user.is_staff %}
+                            <a class="nav-item nav-link" href="{% url 'book_add' %}">Add Book</a>
                             <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
+                        {% else %}
+                            {% for group in user.groups.all %}
+                                {% if group.name ==
+                                    "Employees" %}
+                                    <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
-                    {% endfor %}
-                    <form method="post" action="{% url 'logout' %}" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-link nav-link">Logout</button>
-                    </form>
-                {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
-                {% endif %}
+                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link nav-link">Logout</button>
+                        </form>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    {% endif %}
+                </div>
             </div>
+        </nav>
+        <div class="container">
+            {% block content %}
+            {% endblock content %}
         </div>
-    </nav>
-
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
-
-    <script src="{% static 'seminar/js/bootstrap.bundle.min.js' %}"></script>
-</body>
-
+        <script src="{% static 'seminar/js/bootstrap.bundle.min.js' %}"></script>
+    </body>
 </html>

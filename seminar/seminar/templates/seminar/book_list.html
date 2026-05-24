@@ -1,38 +1,46 @@
 {% extends "seminar/base.html" %}
-
 {% block content %}
-<h1>Books</h1>
-
-<form method="get" class="row g-3 mb-4">
-  <div class="col">
-    <input type="text" name="title" class="form-control" placeholder="Search by title...">
-  </div>
-  <div class="col">
-    <input type="text" name="author" class="form-control" placeholder="Search by author...">
-  </div>
-  <div class="col-auto">
-    <button type="submit" class="btn btn-primary">Filter</button>
-  </div>
-</form>
-
-<div class="row">
-  {% for book in books %}
-  <div class="col-md-4 mb-3">
-    <div class="card">
-      {% if book.cover_image %}
-      <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}"
-        style="height: 200px; object-fit: cover;">
-      {% endif %}
-      <div class="card-body">
-        <h5 class="card-title">
-          <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a>
-        </h5>
-        <p class="card-text"><small class="text-muted">{{ book.genre }}</small></p>
-      </div>
+    <h1>Books</h1>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col">
+            <input type="text"
+                   name="title"
+                   class="form-control"
+                   placeholder="Search by title..." />
+        </div>
+        <div class="col">
+            <input type="text"
+                   name="author"
+                   class="form-control"
+                   placeholder="Search by author..." />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+    <div class="row">
+        {% for book in books %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}"
+                             class="card-img-top"
+                             alt="{{ book.title }}"
+                             style="height: 200px;
+                                    object-fit: cover" />
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a>
+                        </h5>
+                        <p class="card-text">
+                            <small class="text-muted">{{ book.genre }}</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No books found.</p>
+        {% endfor %}
     </div>
-  </div>
-  {% empty %}
-  <p>No books found.</p>
-  {% endfor %}
-</div>
-{% endblock %}
+{% endblock content %}
