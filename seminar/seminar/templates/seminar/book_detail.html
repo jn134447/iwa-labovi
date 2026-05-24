@@ -1,19 +1,21 @@
+{% extends "seminar/base.html" %}
+
+{% block content %}
 <h1>{{ book.title }}</h1>
 <p>{{ book.description }}</p>
-<p>Genre: {{ book.genre }}</p>
+<p><strong>Genre:</strong> {{ book.genre }}</p>
 
 <h3>Authors</h3>
 <ul>
-    {% for author in book.authors.all %}
+  {% for author in book.authors.all %}
     <li>{{ author.first_name }} {{ author.last_name }}</li>
-    {% endfor %}
+  {% endfor %}
 </ul>
 
-{% if user.is_authenticated and user.is_staff %}
-  <p>
-    <a href="{% url 'book_edit' book.pk %}">Edit this book</a> |
-    <a href="{% url 'book_delete' book.pk %}">Delete this book</a>
-  </p>
+{% if user.is_staff %}
+  <a href="{% url 'book_edit' book.pk %}" class="btn btn-warning">Edit</a>
+  <a href="{% url 'book_delete' book.pk %}" class="btn btn-danger">Delete</a>
 {% endif %}
 
-<a href="{% url 'book_list' %}">Back to list</a>
+<a href="{% url 'book_list' %}" class="btn btn-secondary">Back</a>
+{% endblock %}
