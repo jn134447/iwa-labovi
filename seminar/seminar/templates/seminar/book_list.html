@@ -1,0 +1,17 @@
+<h1>Books</h1>
+
+<form method="get">
+  <input type="text" name="q" placeholder="Search by title...">
+  <input type="text" name="author" placeholder="Search by author...">
+  <button type="submit">Filter</button>
+</form>
+
+<ul>
+  {% for book in books %}
+    <li>
+      <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a> — {{ book.genre }}
+    </li>
+  {% empty %}
+    <li>No books found.</li>
+  {% endfor %}
+</ul>
