@@ -104,9 +104,12 @@ def book_delete(request, pk):
 def is_employee(user):
     return user.groups.filter(name="Employees").exists()
 
+def is_staff_or_employee(user):
+    return user.is_staff or is_employee(user)
+
 
 @login_required
-@user_passes_test(is_employee)
+@user_passes_test(is_staff_or_employee)
 def statistics(request):
     total_rentals = Rental.objects.count()
     top_books = Book.objects.annotate(rental_count=Count("rental")).order_by(

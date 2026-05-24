@@ -38,22 +38,23 @@
             <a class="navbar-brand" href="{% url 'book_list' %}">Library</a>
             <div class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
-                <span class="nav-item nav-link text-light">Hello, {{ user.username }}</span>
-                {% if user.is_staff %}
-                <a class="nav-item nav-link" href="{% url 'book_add' %}">Add Book</a>
-                {% endif %}
-                {% for group in user.groups.all %}
-                {% if group.name == "Employees" %}
-                <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
-                {% endif %}
-                {% endfor %}
-                <form method="post" action="{% url 'logout' %}" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link nav-link">Logout</button>
-                </form>
+                    <span class="nav-item nav-link text-light">Hello, {{ user.username }}</span>
+                    {% if user.is_staff %}
+                        <a class="nav-item nav-link" href="{% url 'book_add' %}">Add Book</a>
+                        <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
+                    {% endif %}
+                    {% for group in user.groups.all %}
+                        {% if group.name == "Employees" %}
+                            <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
+                        {% endif %}
+                    {% endfor %}
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link nav-link">Logout</button>
+                    </form>
                 {% else %}
-                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                    <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
                 {% endif %}
             </div>
         </div>
