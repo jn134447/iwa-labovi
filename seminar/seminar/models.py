@@ -15,10 +15,9 @@ class Author(models.Model):
     last_name = models.CharField(max_length=100)
 
     def delete(self, *args, **kwargs):
-        for book in self.book_set.all(): # type: ignore
+        for book in self.book_set.all():  # type: ignore
             book.delete()
         return super().delete(*args, **kwargs)
-
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -33,3 +32,12 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+
+class Rental(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    rented_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} rented {self.book.title}"
