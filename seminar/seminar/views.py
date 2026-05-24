@@ -13,16 +13,17 @@ from .forms import BookForm
 
 def book_list(request):
     books = Book.objects.all()
-    query = request.GET.get("q")
+    query = request.GET.get("title")
     author = request.GET.get("author")
 
     if query:
         books = books.filter(title__icontains=query)
     if author:
-        books = books.filter(
-            models.Q(authors__first_name__icontains=author)
-            | models.Q(authors__last_name__icontains=author)
-        )
+        for word in author.split():
+            books = books.filter(
+                models.Q(authors__first_name__icontains=word)
+                | models.Q(authors__last_name__icontains=word)
+            )
 
     return render(request, "seminar/book_list.html", {"books": books})
 
