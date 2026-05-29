@@ -2,3 +2,4 @@
 .vscode
 **/__pycache__*
 media/covers/*
+!media/covers/.temp
