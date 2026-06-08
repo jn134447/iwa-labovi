@@ -37,12 +37,6 @@
                         {% if user.is_staff %}
                             <a class="nav-item nav-link" href="{% url 'book_add' %}">Add Book</a>
                             <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
-                        {% else %}
-                            {% for group in user.groups.all %}
-                                {% if group.name == "Employees" %}
-                                    <a class="nav-item nav-link" href="{% url 'statistics' %}">Statistics</a>
-                                {% endif %}
-                            {% endfor %}
                         {% endif %}
                         <form method="post" action="{% url 'logout' %}" class="d-inline">
                             {% csrf_token %}

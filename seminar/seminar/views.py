@@ -7,8 +7,9 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Book, Rental, Author
+from .models import Book, Rental, Author, Genre
 from .forms import BookForm
+from django.contrib.auth.models import User
 
 
 def book_list(request):
@@ -108,28 +109,44 @@ def is_staff_or_employee(user):
     return user.is_staff or is_employee(user)
 
 
-@login_required
-@user_passes_test(is_staff_or_employee)
-def statistics(request):
-    total_rentals = Rental.objects.count()
-    top_books = Book.objects.annotate(rental_count=Count("rental")).order_by(
-        "-rental_count"
-    )[:5]
-    top_authors = Author.objects.annotate(rental_count=Count("book__rental")).order_by(
-        "-rental_count"
-    )[:5]
-    recent_rentals = Rental.objects.order_by("-rented_at")[:10]
+# @login_required
+# @user_passes_test(is_staff_or_employee)
+# def statistics(request):
+#     total_rentals = Rental.objects.count()
+#     top_books = Book.objects.annotate(rental_count=Count("rental")).order_by(
+#         "-rental_count"
+#     )[:5]
+#     top_authors = Author.objects.annotate(rental_count=Count("book__rental")).order_by(
+#         "-rental_count"
+#     )[:5]
+#     recent_rentals = Rental.objects.order_by("-rented_at")[:10]
 
-    return render(
-        request,
-        "seminar/statistics.html",
-        {
-            "total_rentals": total_rentals,
-            "top_books": top_books,
-            "top_authors": top_authors,
-            "recent_rentals": recent_rentals,
-        },
-    )
+#     return render(
+#         request,
+#         "seminar/statistics.html",
+#         {
+#             "total_rentals": total_rentals,
+#             "top_books": top_books,
+#             "top_authors": top_authors,
+#             "recent_rentals": recent_rentals,
+#         },
+#     )
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def statistics(request):
+    total_books = Book.objects.count()
+    total_genres = Genre.objects.count()
+    total_authors = Author.objects.count()
+    total_users = User.objects.count()
+    top_genre = Genre.objects.annotate(book_count=Count("book")).order_by("-book_count").first()
+
+    return render(request, "seminar/statistics.html", {
+        "total_books": total_books,
+        "total_genres": total_genres,
+        "total_authors": total_authors,
+        "total_users": total_users,
+        "top_genre": top_genre,
+    })
 
 
 # renting stuff
